@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.explore</groupId>
-	<artifactId>stats-service</artifactId>
+	<artifactId>stats-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>exploreWithMe</name>
 	<description>Demo project for Spring Boot</description>

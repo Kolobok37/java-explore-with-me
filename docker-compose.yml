@@ -8,7 +8,6 @@ services:
       - stats_db
     ports:
       - "9090:9090"
-      - "9091:9091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats_db:5432/stats_db
       - SPRING_DATASOURCE_USERNAME=test
@@ -34,6 +33,17 @@ services:
     container_name: ewm-service
     ports:
       - "8080:8080"
+    environment:
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://stats_db:5431/ewm-db
+          - SPRING_DATASOURCE_USERNAME=test
+          - SPRING_DATASOURCE_PASSWORD=test
 
   ewm-db:
-    image: postgres:14-alpine
+    image: postgres
+    ports:
+      - "5431:5431"
+    environment:
+      POSTGRES_DB: ewm-db
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      PGDATA: /home/aleksandr/dev/ewm-db

@@ -1,4 +1,4 @@
-package com.example.ewmservice;
+package com.ewmservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

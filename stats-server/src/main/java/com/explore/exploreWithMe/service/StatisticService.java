@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StatisticService {
@@ -37,12 +38,12 @@ public class StatisticService {
         if(uris==null||uris.get(0).equals("/events")){
             appDtoList = statisticsStorage.getAllStats(List.of("/events"),LocalDateTime.parse(start,formatter),
                     LocalDateTime.parse(end, formatter), unique).stream().map(MapperApp::mapToAppDto)
-                    .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).toList();
+                    .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
         }
         else{
             appDtoList = statisticsStorage.getStatsByUri(uris,LocalDateTime.parse(start,formatter),
                     LocalDateTime.parse(end, formatter), unique).stream().map(MapperApp::mapToAppDto)
-                    .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).toList();
+                    .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
         }
         return new ResponseEntity<>(appDtoList, HttpStatus.OK);
     }

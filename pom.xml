@@ -136,23 +136,7 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<configuration>
-						<image>
-							<name>ms/product.service:latest</name>
-						</image>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>install</phase>
-							<goals>
-								<goal>build-image</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>

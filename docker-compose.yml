@@ -1,9 +1,9 @@
 version: '3.8'
 services:
 
-  stats-service:
-    build: stats-service/
-    container_name: stats-service
+  stats-server:
+    build: stats-server/
+    container_name: stats-server
     depends_on:
       - stats_db
     ports:
@@ -27,4 +27,4 @@ services:
       POSTGRES_PASSWORD: test
       PGDATA: /home/aleksandr/dev/stats_db
     volumes:
-      - ./stats-service/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./stats-server/schema.sql:/docker-entrypoint-initdb.d/schema.sql

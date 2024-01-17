@@ -34,7 +34,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-          - SPRING_DATASOURCE_URL=jdbc:postgresql://stats_db:5431/ewm-db
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5431/ewm-db
           - SPRING_DATASOURCE_USERNAME=test
           - SPRING_DATASOURCE_PASSWORD=test
 

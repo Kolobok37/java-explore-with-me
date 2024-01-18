@@ -4,6 +4,7 @@ services:
   stats-server:
     build: stats-server/
     container_name: stats-server
+    restart: always
     depends_on:
       - stats_db
     ports:
@@ -25,6 +26,11 @@ services:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       PGDATA: /home/aleksandr/dev/stats_db
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - ./stats-server/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 

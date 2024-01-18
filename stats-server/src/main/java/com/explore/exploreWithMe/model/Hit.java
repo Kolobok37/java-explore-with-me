@@ -1,17 +1,19 @@
 package com.explore.exploreWithMe.model;
 
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "hit")
 @AllArgsConstructor
 @Data
+@Repository
 @NoArgsConstructor
 public class Hit {
     @Id

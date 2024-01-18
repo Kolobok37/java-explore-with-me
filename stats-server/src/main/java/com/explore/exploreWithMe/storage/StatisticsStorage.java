@@ -6,8 +6,6 @@ import com.explore.exploreWithMe.model.Hit;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +21,8 @@ public class StatisticsStorage {
         appRepository.upsertApp(app.getName(), app.getUri());
     }
 
-    public Hit addHit(Hit hit) {return hitRepository.save(hit);
+    public Hit addHit(Hit hit) {
+        return hitRepository.save(hit);
     }
 
     public List<App> getStatsByUri(List<String> uris, LocalDateTime start, LocalDateTime end, boolean unique) {

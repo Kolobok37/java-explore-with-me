@@ -4,7 +4,6 @@ services:
   stats-server:
     build: stats-server/
     container_name: stats-server
-    restart: always
     depends_on:
       - stats_db
     ports:
@@ -37,6 +36,7 @@ services:
   ewm-service:
     build: ewm-service/
     container_name: ewm-service
+    restart: always
     ports:
       - "8080:8080"
     environment:

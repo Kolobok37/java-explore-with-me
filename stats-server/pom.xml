@@ -11,7 +11,7 @@
 	<groupId>com.explore</groupId>
 	<artifactId>stats-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>exploreWithMe</name>
+	<name>stats-server</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>

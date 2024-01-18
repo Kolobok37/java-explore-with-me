@@ -27,29 +27,3 @@ services:
       PGDATA: /home/aleksandr/dev/stats_db
     volumes:
       - ./stats-server/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-
-  ewm-service:
-    build: ewm-service/
-    container_name: ewm-service
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
-      - SPRING_DATASOURCE_USERNAME=test
-      - SPRING_DATASOURCE_PASSWORD=test
-      - STATS_SERVER_URL=http://stats-server:9090
-
-
-  ewm-db:
-    container_name: ewm-db
-    image: postgres
-    ports:
-      - "5431:5431"
-    restart: always
-    environment:
-      POSTGRES_DB: ewm-db
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      PGDATA: /home/aleksandr/dev/ewm-db
-    volumes:
-      - ./ewm-service/schema.sql:/docker-entrypoint-initdb.d/schema.sql

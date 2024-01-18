@@ -24,7 +24,6 @@
     </properties>
     <modules>
         <module>stats-server</module>
-        <module>ewm-service</module>
     </modules>
     <build>
         <pluginManagement>

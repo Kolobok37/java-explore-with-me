@@ -15,13 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class App {
     @Id
-    @Column(name = "hit_uri")
+    @Column(name = "uri")
     private String uri;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "hit_uri")
     private List<Hit> hit;
 

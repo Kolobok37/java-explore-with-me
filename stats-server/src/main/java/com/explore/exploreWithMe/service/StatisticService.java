@@ -3,7 +3,6 @@ package com.explore.exploreWithMe.service;
 
 import com.explore.exploreWithMe.dto.AppDto;
 import com.explore.exploreWithMe.dto.HitDto;
-import com.explore.exploreWithMe.dto.MapperApp;
 import com.explore.exploreWithMe.dto.MapperHit;
 import com.explore.exploreWithMe.model.App;
 import com.explore.exploreWithMe.model.Hit;
@@ -34,12 +33,12 @@ public class StatisticService {
             end = LocalDateTime.MAX.format(formatter);
         }
         if (uris == null) {
-            appDtoList = statisticsStorage.getAllStats(List.of("/events"), LocalDateTime.parse(start, formatter),
-                            LocalDateTime.parse(end, formatter), unique).stream().map(MapperApp::mapToAppDto)
+            appDtoList = statisticsStorage.getAllStats(LocalDateTime.parse(start, formatter),
+                            LocalDateTime.parse(end, formatter), unique).stream()
                     .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
         } else {
             appDtoList = statisticsStorage.getStatsByUri(uris, LocalDateTime.parse(start, formatter),
-                            LocalDateTime.parse(end, formatter), unique).stream().map(MapperApp::mapToAppDto)
+                            LocalDateTime.parse(end, formatter), unique).stream()
                     .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
         }
         return new ResponseEntity<>(appDtoList, HttpStatus.OK);

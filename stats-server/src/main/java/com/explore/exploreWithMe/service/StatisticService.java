@@ -24,7 +24,7 @@ public class StatisticService {
     @Autowired
     StatisticsStorage statisticsStorage;
 
-    public ResponseEntity<List<AppDto>> getStats(String start, String end, List<String> uris, boolean unique) {
+    public ResponseEntity<List<AppDto>> getStats(String start, String end, List<String> uris, String unique) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<AppDto> appDtoList;
         if (start.isBlank()) {
@@ -33,7 +33,7 @@ public class StatisticService {
         if (end.isBlank()) {
             end = LocalDateTime.MAX.format(formatter);
         }
-        if (uris == null || uris.get(0).equals("/events")) {
+        if (uris == null) {
             appDtoList = statisticsStorage.getAllStats(List.of("/events"), LocalDateTime.parse(start, formatter),
                             LocalDateTime.parse(end, formatter), unique).stream().map(MapperApp::mapToAppDto)
                     .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
@@ -57,4 +57,6 @@ public class StatisticService {
         statisticsStorage.createApp(app);
         return new ResponseEntity<>(statisticsStorage.addHit(hit), HttpStatus.CREATED);
     }
+
+
 }

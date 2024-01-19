@@ -25,7 +25,7 @@ public class StatisticsController {
     public ResponseEntity<List<AppDto>> getStats(@RequestParam String start, @RequestParam String end,
                                                  @RequestParam(required = false) List<String> uris,
                                                  @RequestParam(defaultValue = "false") String unique) {
-        return statisticService.getStats(start, end, uris, Boolean.parseBoolean(unique));
+        return statisticService.getStats(start, end, uris, unique.trim());
     }
 
     @PostMapping("/hit")

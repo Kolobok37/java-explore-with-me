@@ -39,6 +39,7 @@ services:
     container_name: ewm-service
     ports:
       - "8080:8080"
+      - "8081:8081"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
       - SPRING_DATASOURCE_USERNAME=test
@@ -50,7 +51,7 @@ services:
     container_name: ewm-db
     image: postgres
     ports:
-      - "5431:5431"
+      - "5431:5432"
     restart: always
     environment:
       POSTGRES_DB: ewm-db

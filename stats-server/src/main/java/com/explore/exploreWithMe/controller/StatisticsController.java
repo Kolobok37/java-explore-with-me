@@ -16,6 +16,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Validated
+@RequestMapping
 @RestController
 public class StatisticsController {
     @Autowired

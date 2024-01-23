@@ -26,6 +26,8 @@ public class CompilationsService {
     CompilationsStorage compilationsStorage;
     @Autowired
     EventStorage eventStorage;
+    @Autowired
+    EventService eventService;
 
     public ResponseEntity<Object> createCompilation(CompilationInDto compilationInDto) {
         List<Event> events = new ArrayList<>();
@@ -85,7 +87,8 @@ public class CompilationsService {
     }
 
     public ResponseEntity<Object> getCompilation(Integer compId) {
-        return new ResponseEntity<>(MapperCompilation.mapToCompilationDto(compilationsStorage.getCompilation(compId))
-                , HttpStatus.OK);
+        return new ResponseEntity<>(MapperCompilation.mapToCompilationDto(compilationsStorage.getCompilation(compId)),
+                HttpStatus.OK);
     }
+
 }

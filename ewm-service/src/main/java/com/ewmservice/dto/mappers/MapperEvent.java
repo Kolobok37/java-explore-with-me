@@ -28,15 +28,15 @@ public class MapperEvent {
         return event;
     }
 
-    public static Event mapToEvent(EventInUpdateDto EventInUpdateDto) {
+    public static Event mapToEvent(EventInUpdateDto eventInUpdateDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime time = null;
-        if (EventInUpdateDto.getEventDate() != null) {
-            time = Optional.of(LocalDateTime.parse(EventInUpdateDto.getEventDate(), formatter)).orElse(null);
+        if (eventInUpdateDto.getEventDate() != null) {
+            time = Optional.of(LocalDateTime.parse(eventInUpdateDto.getEventDate(), formatter)).orElse(null);
         }
-        Event event = new Event(null, EventInUpdateDto.getTitle(), EventInUpdateDto.getAnnotation(), EventInUpdateDto.getDescription(),
-                EventInUpdateDto.getPaid(), EventInUpdateDto.getRequestModeration(), time, null, null, null, EventInUpdateDto.getLocation(),
-                EventInUpdateDto.getParticipantLimit(), null, LocalDateTime.now(), null);
+        Event event = new Event(null, eventInUpdateDto.getTitle(), eventInUpdateDto.getAnnotation(), eventInUpdateDto.getDescription(),
+                eventInUpdateDto.getPaid(), eventInUpdateDto.getRequestModeration(), time, null, null, null, eventInUpdateDto.getLocation(),
+                eventInUpdateDto.getParticipantLimit(), null, LocalDateTime.now(), null);
         return event;
     }
 

@@ -30,17 +30,17 @@ public class BaseClient {
     private <T> AppDto makeAndSendRequest(HttpMethod method, String path, @Nullable Map<String, Object> parameters, @Nullable T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders());
 
-        AppDto StatsServerResponse;
+        AppDto statsServerResponse;
         try {
             if (parameters != null) {
-                StatsServerResponse = rest.getForObject(path, AppDto.class, parameters);
+                statsServerResponse = rest.getForObject(path, AppDto.class, parameters);
             } else {
-                StatsServerResponse = rest.getForObject(path, AppDto.class);
+                statsServerResponse = rest.getForObject(path, AppDto.class);
             }
         } catch (HttpStatusCodeException e) {
             return new AppDto("1", "1", 1);
         }
-        return StatsServerResponse;
+        return statsServerResponse;
     }
 
     private HttpHeaders defaultHeaders() {

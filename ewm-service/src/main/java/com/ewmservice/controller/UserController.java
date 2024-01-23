@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,6 +20,7 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     UserService userService;
+
     @PostMapping("/admin/users")
     public ResponseEntity<Object> createUser(@RequestBody @Valid User user) {
         return userService.createUser(user);
@@ -28,12 +28,13 @@ public class UserController {
 
     @GetMapping("/admin/users")
     public ResponseEntity<Object> getUsers(@RequestParam(required = false) List<Integer> ids,
-                                               @RequestParam(defaultValue = "0") Integer from,
-                                               @RequestParam Optional<Integer> size) {
-        return userService.getUsers(ids,from,size);
+                                           @RequestParam(defaultValue = "0") Integer from,
+                                           @RequestParam(defaultValue = "10") Integer size) {
+        return userService.getUsers(ids, from, size);
     }
+
     @DeleteMapping("/admin/users/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Integer userId){
+    public ResponseEntity<Object> deleteUser(@PathVariable Integer userId) {
         return userService.deleteUser(userId);
     }
 }

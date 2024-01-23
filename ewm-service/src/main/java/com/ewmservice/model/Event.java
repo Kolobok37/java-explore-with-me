@@ -52,8 +52,10 @@ public class Event {
     StateEvent stateAction;
     @Column(name = "created_on")
     LocalDateTime createdOn;
+    @Column(name = "published_on")
+    LocalDateTime publishedOn;
 
-    public List<Request> getApprovedRequest(){
-        return requests.stream().filter(r->r.getStatus().equals(StatusRequest.CONFIRMED)).collect(Collectors.toList());
+    public List<Request> getApprovedRequest() {
+        return requests.stream().filter(r -> StatusRequest.CONFIRMED.toString().equals(r.getStatus())).collect(Collectors.toList());
     }
 }

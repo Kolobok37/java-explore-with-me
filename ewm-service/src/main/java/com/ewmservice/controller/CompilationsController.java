@@ -1,6 +1,7 @@
 package com.ewmservice.controller;
 
 import com.ewmservice.dto.CompilationInDto;
+import com.ewmservice.dto.CompilationUpdateDto;
 import com.ewmservice.service.CompilationsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,25 +21,28 @@ import java.util.Optional;
 public class CompilationsController {
     @Autowired
     CompilationsService compilationsService;
+
     @PostMapping("/admin/compilations")
-        public ResponseEntity<Object> createCompilation(@RequestBody @Valid CompilationInDto compilationInDto) {
+    public ResponseEntity<Object> createCompilation(@RequestBody @Valid CompilationInDto compilationInDto) {
         return compilationsService.createCompilation(compilationInDto);
     }
+
     @DeleteMapping("/admin/compilations/{compId}")
     public ResponseEntity<Object> deleteCompilation(@PathVariable @Positive Integer compId) {
         return compilationsService.deleteCompilation(compId);
     }
 
     @PatchMapping("/admin/compilations/{compId}")
-    public ResponseEntity<Object> updateCompilation(@RequestBody @Valid CompilationInDto compilationInDto,
+    public ResponseEntity<Object> updateCompilation(@RequestBody @Valid CompilationUpdateDto compilationInDto,
                                                     @PathVariable @Positive Integer compId) {
-        return compilationsService.updateCompilation(compilationInDto,compId);
+        return compilationsService.updateCompilation(compilationInDto, compId);
     }
+
     @GetMapping("/compilations")
-    public ResponseEntity<Object> getCompilations(@RequestParam(required = false) Boolean pinned,
-                                           @RequestParam(defaultValue = "0") Integer from,
-                                           @RequestParam Optional<Integer> size) {
-        return compilationsService.getCompilations(pinned,from,size);
+    public ResponseEntity<Object> getCompilations(@RequestParam(defaultValue = "false") Boolean pinned,
+                                                  @RequestParam(defaultValue = "0") Integer from,
+                                                  @RequestParam(defaultValue = "10") Integer size) {
+        return compilationsService.getCompilations(pinned, from, size);
     }
 
     @GetMapping("/compilations/{compId}")

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,7 +19,7 @@ public class UserService {
         return new ResponseEntity<>(userStorage.createUser(user), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Object> getUsers(List<Integer> usersId, Integer from, Optional<Integer> size) {
+    public ResponseEntity<Object> getUsers(List<Integer> usersId, Integer from, Integer size) {
         return new ResponseEntity<>(userStorage.getUsers(usersId, Paging.paging(from, size)), HttpStatus.OK);
     }
 

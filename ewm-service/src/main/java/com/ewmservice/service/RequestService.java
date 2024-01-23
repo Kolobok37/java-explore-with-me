@@ -2,6 +2,7 @@ package com.ewmservice.service;
 
 import com.ewmservice.dto.RequestChangeDto;
 import com.ewmservice.dto.RequestDto;
+import com.ewmservice.dto.RequestStatusUpdateDto;
 import com.ewmservice.dto.mappers.MapperRequest;
 import com.ewmservice.exception.RequestException;
 import com.ewmservice.exception.ValidationDataException;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,7 +49,7 @@ public class RequestService {
         if (event.getRequests().stream().anyMatch(request1 -> Objects.equals(request1.getRequester().getId(), userId))) {
             throw new RequestException("Duplicate request.");
         }
-        if (event.getRequestModeration()) {
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             request.setStatus("CONFIRMED");
         } else {
             request.setStatus("PENDING");
@@ -64,7 +66,7 @@ public class RequestService {
         if (!Objects.equals(request.getRequester().getId(), userId)) {
             throw new RequestException("You can only cancel your request.");
         }
-        request.setStatus("CANCEL");
+        request.setStatus("CANCELED");
         RequestDto requestDto = MapperRequest.mapToRequestDto(requestStorage.cancelRequest(request));
         return new ResponseEntity<>(requestDto, HttpStatus.OK);
     }
@@ -86,34 +88,35 @@ public class RequestService {
 
     public ResponseEntity<Object> changeStatusRequest(Integer userId, Integer eventId,
                                                       RequestChangeDto requestChangeDto) {
-        List<Request> requests = requestStorage.getRequestsByStatus(requestChangeDto.getRequestIds(),
-                "PENDING");
+        List<Request> requests = requestStorage.getRequestsByStatus(Arrays.stream(requestChangeDto.getRequestIds()).collect(Collectors.toList()));
         Event event = eventStorage.getEvent(eventId);
-        if (requestChangeDto.getStatus().equals(StatusRequest.REJECTED.toString())) {
+        if (StatusRequest.REJECTED.toString().equals(requestChangeDto.getStatus())) {
             for (int i = 0; i < requests.size(); i++) {
+                if ("CONFIRMED".equals(requests.get(i).getStatus())) {
+                    throw new RequestException("You not rejected confirmed request.");
+                }
                 requests.get(i).setStatus("REJECTED");
             }
-        } else if (requestChangeDto.getStatus().equals(StatusRequest.CONFIRMED.toString())) {
+        } else if (StatusRequest.CONFIRMED.toString().equals(requestChangeDto.getStatus())) {
             int requestsSize = event.getApprovedRequest().size();
-            if (event.getParticipantLimit() <= requestsSize) {
+            if (event.getParticipantLimit() <= requestsSize && event.getParticipantLimit() != 0) {
                 throw new RequestException("The limit of participants has ended");
-
             }
             for (int i = 0; i < requests.size(); i++) {
                 requests.get(i).setStatus("CONFIRMED");
                 requestsSize++;
-                if (event.getParticipantLimit() == requestsSize) {
-                    for (int j = i; j < requests.size(); j++) {
+                if (event.getParticipantLimit() == requestsSize && event.getParticipantLimit() != 0) {
+                    for (int j = ++i; j < requests.size(); j++) {
                         requests.get(j).setStatus("REJECTED");
                     }
                     break;
                 }
             }
+        } else {
+            throw new ValidationDataException("Status not valid.");
         }
-        else{
-            throw  new ValidationDataException("Status not valid.");
-        }
-        return new ResponseEntity<>(requestStorage.updateRequests(requests)
-                .stream().map(MapperRequest::mapToRequestDto), HttpStatus.OK);
+        RequestStatusUpdateDto requestStatusUpdateDto = MapperRequest
+                .mapToRequestStatusUpdateDto(requestStorage.updateRequests(requests));
+        return new ResponseEntity<>(requestStatusUpdateDto, HttpStatus.OK);
     }
 }

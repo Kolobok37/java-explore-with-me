@@ -1,8 +1,6 @@
 package com.ewmservice.model;
 
-import com.ewmservice.model.auxiliaryEntities.StatusRequest;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

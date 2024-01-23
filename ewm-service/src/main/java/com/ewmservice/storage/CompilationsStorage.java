@@ -24,7 +24,7 @@ public class CompilationsStorage {
 
     public Compilation getCompilation(Integer compId) {
         return compilationsRepository.findById(compId)
-                .orElseThrow(()-> new NotFoundException("Compilation is not found"));
+                .orElseThrow(() -> new NotFoundException("Compilation is not found"));
     }
 
     public Compilation updateCompilation(Compilation compilation) {
@@ -34,7 +34,8 @@ public class CompilationsStorage {
     public List<Compilation> getCompilations(Pageable paging) {
         return compilationsRepository.findAll(paging).toList();
     }
+
     public List<Compilation> getCompilations(Boolean pinned, Pageable paging) {
-        return compilationsRepository.findAllByPinned(pinned,paging);
+        return compilationsRepository.findAllByPinned(pinned, paging);
     }
 }

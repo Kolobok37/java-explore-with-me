@@ -3,13 +3,11 @@ package com.ewmservice.storage;
 import com.ewmservice.exception.DuplicateDataException;
 import com.ewmservice.model.Category;
 import com.ewmservice.storage.jpa.CategoryRepository;
-import com.ewmservice.exception.DuplicateDataException;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +15,11 @@ import java.util.Optional;
 public class CategoryStorage {
     @Autowired
     CategoryRepository categoryRepository;
+
     public Category createCategory(Category category) {
         try {
             return categoryRepository.save(category);
-        }
-        catch (ConstraintViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateDataException("Category name is not unique.");
         }
     }
@@ -29,11 +27,11 @@ public class CategoryStorage {
     public Category updateCategory(Category category) {
         try {
             return categoryRepository.save(category);
-        }
-        catch (ConstraintViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateDataException("Category name is not unique.");
         }
     }
+
     public void deleteCategory(Integer categoriesId) {
         categoryRepository.deleteById(categoriesId);
     }

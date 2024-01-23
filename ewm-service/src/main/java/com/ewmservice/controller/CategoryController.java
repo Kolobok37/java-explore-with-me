@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public ResponseEntity<Object> getCategories(@RequestParam(defaultValue = "0") Integer from,
-                                                @RequestParam(defaultValue = "10") Optional<Integer> size) {
+                                                @RequestParam(defaultValue = "10") Integer size) {
         return categoryService.getCategories(from, size);
     }
 

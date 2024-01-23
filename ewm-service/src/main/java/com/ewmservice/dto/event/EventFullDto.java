@@ -2,14 +2,11 @@ package com.ewmservice.dto.event;
 
 import com.ewmservice.dto.CategoryDto;
 import com.ewmservice.dto.UserShortDto;
-import com.ewmservice.model.Category;
 import com.ewmservice.model.auxiliaryEntities.Location;
 import com.ewmservice.model.auxiliaryEntities.StateEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -30,4 +27,5 @@ public class EventFullDto {
     Integer confirmedRequests;
     Integer views;
     StateEvent state;
+    String publishedOn;
 }

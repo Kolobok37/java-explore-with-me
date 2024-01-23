@@ -15,10 +15,10 @@ public class EventInDto {
     @Length(max = 120, min = 3)
     String title;
     @NotBlank(message = "Field: annotation. Error: must not be blank. Value: null")
-    @Length(min = 20,max = 2000)
+    @Length(min = 20, max = 2000)
     String annotation;
     @NotBlank(message = "Field: description. Error: must not be blank. Value: null")
-    @Length(min = 20,max = 7000)
+    @Length(min = 20, max = 7000)
     String description;
     Boolean paid;
     Boolean requestModeration;

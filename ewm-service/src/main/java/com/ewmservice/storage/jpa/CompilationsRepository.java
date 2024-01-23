@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 
-public interface CompilationsRepository extends JpaRepository<Compilation,Integer> {
+public interface CompilationsRepository extends JpaRepository<Compilation, Integer> {
     List<Compilation> findAllByPinned(Boolean pinned, Pageable paging);
 }
 

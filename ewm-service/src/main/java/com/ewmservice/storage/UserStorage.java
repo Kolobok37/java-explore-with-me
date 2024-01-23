@@ -5,12 +5,11 @@ import com.ewmservice.exception.NotFoundException;
 import com.ewmservice.model.User;
 import com.ewmservice.storage.jpa.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UserStorage {
@@ -20,14 +19,13 @@ public class UserStorage {
     public User createUser(User user) {
         try {
             return userRepository.save(user);
-        }
-        catch (ConstraintViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateDataException("Email is not unique.");
         }
     }
 
     public User getUser(Integer userId) {
-        return userRepository.findById(userId).orElseThrow(()->new NotFoundException("User not found."));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
     }
 
     public List<User> getUsers(List<Integer> usersId, Pageable pageable) {

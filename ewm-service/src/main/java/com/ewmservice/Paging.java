@@ -4,15 +4,16 @@ import com.ewmservice.exception.ValidationDataException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 public class Paging {
-    public static Pageable paging(Integer from, Optional<Integer> size) {
+    public static Pageable paging(Integer from, Integer size) {
         Pageable pageable;
-        if (from < 0 || size.isPresent() && size.get() < 1) {
+        if (from < 0) {
             throw new ValidationDataException("Date is not valid.");
+        } else if (from == 0) {
+            pageable = PageRequest.of(0, size);
+        } else {
+            pageable = PageRequest.of(from / size, size);
         }
-        pageable = size.map(integer -> PageRequest.of(from / integer, integer)).orElseGet(() -> PageRequest.of(from, 100));
         return pageable;
     }
 }

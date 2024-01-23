@@ -2,6 +2,7 @@ package com.ewmservice.controller;
 
 import com.ewmservice.dto.event.EventInDto;
 import com.ewmservice.dto.event.EventInUpdateDto;
+import com.ewmservice.model.auxiliaryEntities.SortValues;
 import com.ewmservice.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class EventsController {
 
     @GetMapping("/users/{userId}/events")
     public ResponseEntity<Object> getMyEvents(@RequestParam(defaultValue = "0") Integer from,
-                                              @RequestParam(defaultValue = "10") Optional<Integer> size,
+                                              @RequestParam(defaultValue = "10") Integer size,
                                               @PathVariable @Positive Integer userId) {
         return eventService.getMyEvents(userId, from, size);
     }
@@ -60,7 +61,7 @@ public class EventsController {
                                                    @RequestParam(required = false) String rangeStart,
                                                    @RequestParam(required = false) String rangeEnd,
                                                    @RequestParam(defaultValue = "0") Integer from,
-                                                   @RequestParam(defaultValue = "10") Optional<Integer> size) {
+                                                   @RequestParam(defaultValue = "10") Integer size) {
         return eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
@@ -69,15 +70,18 @@ public class EventsController {
                                                     @RequestParam(required = false) Integer[] categories,
                                                     @RequestParam(required = false) String rangeStart,
                                                     @RequestParam(required = false) String rangeEnd,
+                                                    @RequestParam(required = false) SortValues sort,
                                                     @RequestParam(defaultValue = "true") Boolean onlyAvailable,
-                                                    @RequestParam(defaultValue = "false") Boolean paid,
+                                                    @RequestParam(required = false) Boolean paid,
                                                     @RequestParam(defaultValue = "0") Integer from,
-                                                    @RequestParam(defaultValue = "10") Optional<Integer> size) {
-        return eventService.getEventsByPublic(text, categories, rangeStart, rangeEnd, onlyAvailable, paid, from, size);
+                                                    @RequestParam(defaultValue = "10") Integer size,
+                                                    HttpServletRequest request) {
+        return eventService.getEventsByPublic(text, categories, rangeStart, rangeEnd, onlyAvailable, paid, sort,
+                from, size, request);
     }
 
     @GetMapping("/events/{id}")
-    public ResponseEntity<Object> getEventByPublic(@PathVariable @Positive Integer id) {
-        return eventService.getEventByPublic(id);
+    public ResponseEntity<Object> getEventByPublic(@PathVariable @Positive Integer id, HttpServletRequest request) {
+        return eventService.getEventByPublic(id, request);
     }
 }

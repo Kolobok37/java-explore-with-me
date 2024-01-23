@@ -4,7 +4,7 @@ import com.ewmservice.dto.CategoryDto;
 import com.ewmservice.model.Category;
 
 public class MapperCategory {
-    public static CategoryDto mapToCategoryDto(Category category){
-        return new CategoryDto(category.getId(),category.getName());
+    public static CategoryDto mapToCategoryDto(Category category) {
+        return new CategoryDto(category.getId(), category.getName());
     }
 }

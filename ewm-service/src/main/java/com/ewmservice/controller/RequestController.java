@@ -1,7 +1,6 @@
 package com.ewmservice.controller;
 
 import com.ewmservice.dto.RequestChangeDto;
-import com.ewmservice.model.Request;
 import com.ewmservice.service.RequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,30 +22,33 @@ public class RequestController {
     RequestService requestService;
 
     @PostMapping("/users/{userId}/requests")
-    public ResponseEntity<Object> createRequest( @PathVariable @Positive Integer userId,
+    public ResponseEntity<Object> createRequest(@PathVariable @Positive Integer userId,
                                                 @RequestParam @Positive Integer eventId) {
 
-        return requestService.createRequest(userId,eventId);
+        return requestService.createRequest(userId, eventId);
     }
 
     @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
-    public ResponseEntity<Object> cancelRequest( @PathVariable @Positive Integer userId,
-                                                 @PathVariable @Positive Integer requestId) {
-        return requestService.cancelRequest(userId,requestId);
+    public ResponseEntity<Object> cancelRequest(@PathVariable @Positive Integer userId,
+                                                @PathVariable @Positive Integer requestId) {
+        return requestService.cancelRequest(userId, requestId);
     }
+
     @GetMapping("/users/{userId}/requests")
     public ResponseEntity<Object> getMyRequests(@PathVariable @Positive Integer userId) {
         return requestService.getMyRequests(userId);
     }
+
     @GetMapping("/users/{userId}/events/{eventId}/requests")
     public ResponseEntity<Object> getRequestsForEvent(@PathVariable @Positive Integer userId,
                                                       @PathVariable @Positive Integer eventId) {
-        return requestService.getRequestsForEvent(userId,eventId);
+        return requestService.getRequestsForEvent(userId, eventId);
     }
+
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
     public ResponseEntity<Object> changeStatusRequest(@PathVariable @Positive Integer userId,
                                                       @PathVariable @Positive Integer eventId,
                                                       @RequestBody RequestChangeDto requestChangeDto) {
-        return requestService.changeStatusRequest(userId,eventId,requestChangeDto);
+        return requestService.changeStatusRequest(userId, eventId, requestChangeDto);
     }
 }

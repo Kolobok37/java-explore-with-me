@@ -12,7 +12,7 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
     @Query("FROM Request as r " +
             "WHERE r.id in ?1 AND " +
             "r.status in ?2")
-    List<Request> findAllByIdAndStatus(List<Integer> Id, String status);
+    List<Request> findAllByIdAndStatus(List<Integer> id, String status);
 
     List<Request> findAllByRequesterId(Integer userId);
 

@@ -171,8 +171,8 @@ public class EventService {
                 && (StateEvent.REJECTED.equals(oldEvent.getStateAction()))) {
             throw new PublishEventException("You can't publish rejected event.");
         }
-        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.updateEvent(oldEvent)
-                , getAllViewsByEvent("/events/" + oldEvent.getId())), HttpStatus.OK);
+        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.updateEvent(oldEvent),
+                getAllViewsByEvent("/events/" + oldEvent.getId())), HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getEventsByPublic(String text, Integer[] categories, String rangeStart,
@@ -195,8 +195,8 @@ public class EventService {
         if (startTime.isAfter(endTime)) {
             throw new ValidationDataException("Date is not valid");
         }
-        List<EventFullDto> eventFullDto = eventStorage.getEventsByPublic(text, categories, startTime, endTime
-                        , Paging.paging(from, size)).stream()
+        List<EventFullDto> eventFullDto = eventStorage.getEventsByPublic(text, categories, startTime, endTime,
+                        Paging.paging(from, size)).stream()
                 .map(e -> MapperEvent.mapToEventFullDto(e, getAllViewsByEvent("/events/" + e.getId())))
                 .collect(Collectors.toList());
         if (paid != null) {

@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -230,10 +229,7 @@ public class EventService {
 
     public Integer getAllViewsByEvent(String uris) {
         List<String> list = List.of(uris);
-        List<AppDto> appDtoList = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
         AppDto obj1 = eventClient.getStats(list);
-
         return obj1.getHits();
     }
 }

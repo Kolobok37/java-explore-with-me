@@ -1,7 +1,6 @@
 package com.ewmservice.client;
 
 import com.ewmservice.dto.dto.AppDto;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -28,8 +27,6 @@ public class BaseClient {
     }
 
     private <T> AppDto makeAndSendRequest(HttpMethod method, String path, @Nullable Map<String, Object> parameters, @Nullable T body) {
-        HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders());
-
         AppDto statsServerResponse;
         try {
             if (parameters != null) {

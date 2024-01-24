@@ -54,7 +54,6 @@ public class EventStorage {
             events = eventRepository.getEventsByAdminByUsers(users, rangeStart, rangeEnd, paging);
         } else {
             events = eventRepository.getEventsByAdminByUsersAndCategory(users, categories, rangeStart, rangeEnd, paging);
-
         }
         return events;
     }

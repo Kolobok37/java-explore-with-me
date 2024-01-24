@@ -23,7 +23,8 @@ public class StatisticsController {
     private StatisticService statisticService;
 
     @GetMapping("/stats")
-    public ResponseEntity<List<AppDto>> getStats(@RequestParam String start, @RequestParam String end,
+    public ResponseEntity<List<AppDto>> getStats(@RequestParam(required = false) String start,
+                                                 @RequestParam(required = false) String end,
                                                  @RequestParam(required = false) List<String> uris,
                                                  @RequestParam(defaultValue = "false") String unique) {
         return statisticService.getStats(start, end, uris, unique.trim());

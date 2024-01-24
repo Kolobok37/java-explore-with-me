@@ -27,11 +27,6 @@ services:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       PGDATA: /home/aleksandr/dev/stats_db
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 65s
-      timeout: 65s
-      retries: 65
     volumes:
       - ./stats-server/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 

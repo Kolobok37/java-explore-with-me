@@ -87,7 +87,13 @@ public class CompilationsService {
     }
 
     public ResponseEntity<Object> getCompilation(Integer compId) {
-        return new ResponseEntity<>(MapperCompilation.mapToCompilationDto(compilationsStorage.getCompilation(compId)),
+        Compilation compilation = compilationsStorage.getCompilation(compId);
+        if (!compilation.getEvents().isEmpty()) {
+            List<String> list = compilation.getEvents().stream().map(Event::getId)
+                    .map(e -> "/events/" + e).collect(Collectors.toList());
+            eventService.getAllViewsByEvents(list);
+        }
+        return new ResponseEntity<>(MapperCompilation.mapToCompilationDto(compilation),
                 HttpStatus.OK);
     }
 

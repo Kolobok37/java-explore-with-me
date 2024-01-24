@@ -77,14 +77,15 @@ public class EventService {
 
     public ResponseEntity<Object> getMyEvents(Integer userId, Integer from, Integer size) {
         List<EventFullDto> eventFullDto = eventStorage.getMyEvents(userId, Paging.paging(from, size)).stream()
-                .map(e -> MapperEvent.mapToEventFullDto(e, getAllViewsByEvent("/events/" + e.getId())))
+                .map(e -> MapperEvent.mapToEventFullDto(e, getSizeViewsByEvent(List.of("/events/" + e.getId()))))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(eventFullDto, HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getMyEvent(Integer userId, Integer eventId) {
-        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.getMyEvent(userId, eventId),
-                getAllViewsByEvent("/events/" + eventId)), HttpStatus.OK);
+        Event event = eventStorage.getMyEvent(userId, eventId);
+        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(event,
+                getSizeViewsByEvent(List.of("/events/" + event.getId()))), HttpStatus.OK);
     }
 
     public ResponseEntity<Object> updateMyEvent(EventInUpdateDto eventInDto, Integer userId, Integer eventId) {
@@ -110,7 +111,7 @@ public class EventService {
             oldEvent.setStateAction(StateEvent.PENDING);
         }
         return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.updateEvent(oldEvent),
-                getAllViewsByEvent("/events/" + oldEvent.getId())), HttpStatus.OK);
+                getSizeViewsByEvent(List.of("/events/" + oldEvent.getId()))), HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getEventsByAdmin(Integer[] users, String[] states, Integer[] categories,
@@ -135,7 +136,7 @@ public class EventService {
         List<Event> events = eventStorage.getEventsByAdmin(users, categories, startTime, endTime,
                 Paging.paging(from, size));
         List<EventFullDto> eventFullDto = events.stream()
-                .map(e -> MapperEvent.mapToEventFullDto(e, getAllViewsByEvent("/events/" + e.getId())))
+                .map(e -> MapperEvent.mapToEventFullDto(e, getSizeViewsByEvent(List.of("/events/" + e.getId()))))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(eventFullDto, HttpStatus.OK);
     }
@@ -171,7 +172,7 @@ public class EventService {
             throw new PublishEventException("You can't publish rejected event.");
         }
         return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.updateEvent(oldEvent),
-                getAllViewsByEvent("/events/" + oldEvent.getId())), HttpStatus.OK);
+                getSizeViewsByEvent(List.of("/events/" + oldEvent.getId()))), HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getEventsByPublic(String text, Integer[] categories, String rangeStart,
@@ -196,7 +197,7 @@ public class EventService {
         }
         List<EventFullDto> eventFullDto = eventStorage.getEventsByPublic(text, categories, startTime, endTime,
                         Paging.paging(from, size)).stream()
-                .map(e -> MapperEvent.mapToEventFullDto(e, getAllViewsByEvent("/events/" + e.getId())))
+                .map(e -> MapperEvent.mapToEventFullDto(e, getSizeViewsByEvent(List.of("/events/" + e.getId()))))
                 .collect(Collectors.toList());
         if (paid != null) {
             eventFullDto = eventFullDto.stream().filter(e -> e.getPaid() == paid).collect(Collectors.toList());
@@ -222,14 +223,22 @@ public class EventService {
         if (event.getStateAction() != StateEvent.PUBLISHED) {
             throw new NotFoundException("Event dot'n publish.");
         }
-        eventClient.addHit(new HitDto("/events/" + id, "/events/" + id, request.getRemoteAddr(), null));
-        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(event, getAllViewsByEvent("/events/" + id)),
-                HttpStatus.OK);
+        eventClient.addHit(new HitDto("/events/" + id, "/events/" + id,
+                request.getRemoteAddr(), null));
+        return new ResponseEntity<>(MapperEvent.
+                mapToEventFullDto(event, getSizeViewsByEvent(List.of("/events/" + id))), HttpStatus.OK);
     }
 
-    public Integer getAllViewsByEvent(String uris) {
-        List<String> list = List.of(uris);
-        AppDto obj1 = eventClient.getStats(list);
-        return obj1.getHits();
+    public List<AppDto> getAllViewsByEvents(List<String> uris) {
+        List<AppDto> obj1 = eventClient.getStats(uris);
+        return obj1;
+    }
+
+    public Integer getSizeViewsByEvent(List<String> uris) {
+        List<AppDto> list = getAllViewsByEvents(uris);
+        if (list.size() != 0) {
+            return list.get(0).getHits();
+        }
+        return 0;
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EventClient extends BaseClient {
@@ -24,15 +23,19 @@ public class EventClient extends BaseClient {
         );
     }
 
-    public AppDto getStats(List<String> uris) {
-        Map<String, Object> parameters = Map.of(
-                "uris", uris
-        );
-        return get("uris={uris}", parameters);
+    public List<AppDto> getStats(List<String> uris) {
+        StringBuilder path = new StringBuilder("/stats?unique=true&uris=");
+        for (int i = 0; i < uris.size(); i++) {
+            path.append(uris.get(i));
+            if (i != uris.size() - 1) {
+                path.append(",");
+            }
+        }
+        return get(path.toString());
     }
 
-    public AppDto addHit(HitDto hitDto) {
-        return post("/hit", hitDto);
+    public void addHit(HitDto hitDto) {
+        post("/hit", hitDto);
     }
 }
 

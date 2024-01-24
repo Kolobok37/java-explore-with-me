@@ -225,8 +225,8 @@ public class EventService {
         }
         eventClient.addHit(new HitDto("/events/" + id, "/events/" + id,
                 request.getRemoteAddr(), null));
-        return new ResponseEntity<>(MapperEvent.
-                mapToEventFullDto(event, getSizeViewsByEvent(List.of("/events/" + id))), HttpStatus.OK);
+        return new ResponseEntity<>(MapperEvent
+                .mapToEventFullDto(event, getSizeViewsByEvent(List.of("/events/" + id))), HttpStatus.OK);
     }
 
     public List<AppDto> getAllViewsByEvents(List<String> uris) {

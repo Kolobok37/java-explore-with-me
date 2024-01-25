@@ -17,9 +17,9 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private    Integer id;
     @NotBlank(message = "Field: name. Error: must not be blank. Value: null")
     @Length(max = 50)
     @Column(name = "name")
-    String name;
+    private   String name;
 }

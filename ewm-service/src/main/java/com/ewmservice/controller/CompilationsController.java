@@ -1,7 +1,7 @@
 package com.ewmservice.controller;
 
-import com.ewmservice.dto.CompilationInDto;
-import com.ewmservice.dto.CompilationUpdateDto;
+import com.ewmservice.dto.compilation.CompilationInDto;
+import com.ewmservice.dto.compilation.CompilationUpdateDto;
 import com.ewmservice.service.CompilationsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

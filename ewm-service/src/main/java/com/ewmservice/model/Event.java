@@ -21,39 +21,39 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private    Integer id;
     @Column(name = "title")
-    String title;
+    private   String title;
     @Column(name = "annotation")
-    String annotation;
+    private    String annotation;
     @Column(name = "description")
-    String description;
+    private     String description;
     @Column(name = "paid")                      //Платно?
-    Boolean paid;
+    private    Boolean paid;
     @Column(name = "request_moderation")
-    Boolean requestModeration;                  //Нужно подтверждать?
+    private     Boolean requestModeration;                  //Нужно подтверждать?
     @Column(name = "event_date")
-    LocalDateTime eventDate;
+    private   LocalDateTime eventDate;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
-    List<Request> requests;
+    private     List<Request> requests;
     @ManyToOne
     @JoinColumn(name = "category_id")
-    Category category;
+    private    Category category;
     @ManyToOne
     @JoinColumn(name = "initiator_id")
-    User initiator;
+    private  User initiator;
     @ManyToOne
     @JoinColumn(name = "location_id")
-    Location location;
+    private    Location location;
     @Column(name = "participant_limit")
-    Integer participantLimit;
+    private    Integer participantLimit;
     @Column(name = "state_event")
-    StateEvent stateAction;
+    private     StateEvent stateAction;
     @Column(name = "created_on")
-    LocalDateTime createdOn;
+    private    LocalDateTime createdOn;
     @Column(name = "published_on")
-    LocalDateTime publishedOn;
+    private   LocalDateTime publishedOn;
 
     public List<Request> getApprovedRequest() {
         return requests.stream().filter(r -> StatusRequest.CONFIRMED.toString().equals(r.getStatus())).collect(Collectors.toList());

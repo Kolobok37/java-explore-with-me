@@ -1,7 +1,7 @@
 package com.ewmservice.client;
 
-import com.ewmservice.dto.dto.AppDto;
-import com.ewmservice.dto.dto.HitDto;
+import com.ewmservice.dto.dtoStats.AppDto;
+import com.ewmservice.dto.dtoStats.HitDto;
 import com.ewmservice.exception.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

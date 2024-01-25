@@ -16,14 +16,14 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private  Integer id;
     @Column(name = "title")
-    String title;
+    private   String title;
     @Column(name = "pinned")
-    Boolean pinned;
+    private  Boolean pinned;
     @ManyToMany
     @JoinTable(name = "events_compilations",
             joinColumns = @JoinColumn(name = "compilation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"))
-    List<Event> events;
+    private   List<Event> events;
 }

@@ -1,4 +1,4 @@
-package com.ewmservice.dto;
+package com.ewmservice.dto.compilation;
 
 import com.ewmservice.dto.event.EventShortDto;
 import lombok.AllArgsConstructor;

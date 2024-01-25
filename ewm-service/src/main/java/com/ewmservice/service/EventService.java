@@ -2,12 +2,9 @@ package com.ewmservice.service;
 
 import com.ewmservice.Paging;
 import com.ewmservice.client.EventClient;
-import com.ewmservice.dto.dto.AppDto;
-import com.ewmservice.dto.dto.HitDto;
-import com.ewmservice.dto.event.EventFullDto;
-import com.ewmservice.dto.event.EventInDto;
-import com.ewmservice.dto.event.EventInUpdateDto;
-import com.ewmservice.dto.event.StateEventDto;
+import com.ewmservice.dto.dtoStats.AppDto;
+import com.ewmservice.dto.dtoStats.HitDto;
+import com.ewmservice.dto.event.*;
 import com.ewmservice.dto.mappers.MapperEvent;
 import com.ewmservice.exception.NotFoundException;
 import com.ewmservice.exception.PublishEventException;
@@ -31,7 +28,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +43,6 @@ public class EventService {
     UserStorage userStorage;
     @Autowired
     CategoryStorage categoryStorage;
-    ObjectMapper objectMapper = new ObjectMapper();
-    Gson gson = new GsonBuilder().create();
     @Autowired
     private EventClient eventClient;
 
@@ -76,16 +73,14 @@ public class EventService {
     }
 
     public ResponseEntity<Object> getMyEvents(Integer userId, Integer from, Integer size) {
-        List<EventFullDto> eventFullDto = eventStorage.getMyEvents(userId, Paging.paging(from, size)).stream()
-                .map(e -> MapperEvent.mapToEventFullDto(e, getSizeViewsByEvent(List.of("/events/" + e.getId()))))
-                .collect(Collectors.toList());
+        List<EventFullDto> eventFullDto = distributionViewByEvents(eventStorage
+                .getMyEvents(userId, Paging.paging(from, size)));
         return new ResponseEntity<>(eventFullDto, HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getMyEvent(Integer userId, Integer eventId) {
         Event event = eventStorage.getMyEvent(userId, eventId);
-        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(event,
-                getSizeViewsByEvent(List.of("/events/" + event.getId()))), HttpStatus.OK);
+        return new ResponseEntity<>(distributionViewByEvents(List.of(event)), HttpStatus.OK);
     }
 
     public ResponseEntity<Object> updateMyEvent(EventInUpdateDto eventInDto, Integer userId, Integer eventId) {
@@ -110,34 +105,24 @@ public class EventService {
                 && StateEvent.REJECTED.equals(oldEvent.getStateAction())) {
             oldEvent.setStateAction(StateEvent.PENDING);
         }
-        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.updateEvent(oldEvent),
-                getSizeViewsByEvent(List.of("/events/" + oldEvent.getId()))), HttpStatus.OK);
+        return new ResponseEntity<>(distributionViewByEvents(List.of(eventStorage.updateEvent(oldEvent)))
+                , HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getEventsByAdmin(Integer[] users, String[] states, Integer[] categories,
                                                    String rangeStart, String rangeEnd, Integer from,
                                                    Integer size) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startTime;
-        LocalDateTime endTime;
-        if (rangeStart != null) {
-            startTime = LocalDateTime.parse(rangeStart, formatter);
-        } else {
-            startTime = LocalDateTime.of(1400, 1, 1, 0, 0);
-        }
-        if (rangeEnd != null) {
-            endTime = LocalDateTime.parse(rangeEnd, formatter);
-        } else {
-            endTime = LocalDateTime.of(9999, 12, 31, 23, 59);
-        }
+        LocalDateTime startTime = rangeStart != null ? LocalDateTime.parse(rangeStart, formatter)
+                : LocalDateTime.of(1400, 1, 1, 0, 0);
+        LocalDateTime endTime = rangeStart != null ? LocalDateTime.parse(rangeStart, formatter)
+                : LocalDateTime.of(9999, 12, 31, 23, 59);
         if (startTime.isAfter(endTime)) {
             throw new ValidationDataException("Date is not valid");
         }
         List<Event> events = eventStorage.getEventsByAdmin(users, categories, startTime, endTime,
                 Paging.paging(from, size));
-        List<EventFullDto> eventFullDto = events.stream()
-                .map(e -> MapperEvent.mapToEventFullDto(e, getSizeViewsByEvent(List.of("/events/" + e.getId()))))
-                .collect(Collectors.toList());
+        List<EventFullDto> eventFullDto = distributionViewByEvents(events);
         return new ResponseEntity<>(eventFullDto, HttpStatus.OK);
     }
 
@@ -171,8 +156,8 @@ public class EventService {
                 && (StateEvent.REJECTED.equals(oldEvent.getStateAction()))) {
             throw new PublishEventException("You can't publish rejected event.");
         }
-        return new ResponseEntity<>(MapperEvent.mapToEventFullDto(eventStorage.updateEvent(oldEvent),
-                getSizeViewsByEvent(List.of("/events/" + oldEvent.getId()))), HttpStatus.OK);
+        return new ResponseEntity<>(distributionViewByEvents(List.of(eventStorage.updateEvent(oldEvent))),
+                HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getEventsByPublic(String text, Integer[] categories, String rangeStart,
@@ -180,25 +165,15 @@ public class EventService {
                                                     SortValues sort, Integer from, Integer size,
                                                     HttpServletRequest request) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startTime;
-        LocalDateTime endTime;
-        if (rangeStart != null) {
-            startTime = LocalDateTime.parse(rangeStart, formatter);
-        } else {
-            startTime = LocalDateTime.of(1400, 1, 1, 0, 0);
-        }
-        if (rangeEnd != null) {
-            endTime = LocalDateTime.parse(rangeEnd, formatter);
-        } else {
-            endTime = LocalDateTime.of(9999, 12, 31, 23, 59);
-        }
+        LocalDateTime startTime = rangeStart != null ? LocalDateTime.parse(rangeStart, formatter)
+                : LocalDateTime.of(1400, 1, 1, 0, 0);
+        LocalDateTime endTime = rangeStart != null ? LocalDateTime.parse(rangeStart, formatter)
+                : LocalDateTime.of(9999, 12, 31, 23, 59);
         if (startTime.isAfter(endTime)) {
             throw new ValidationDataException("Date is not valid");
         }
-        List<EventFullDto> eventFullDto = eventStorage.getEventsByPublic(text, categories, startTime, endTime,
-                        Paging.paging(from, size)).stream()
-                .map(e -> MapperEvent.mapToEventFullDto(e, getSizeViewsByEvent(List.of("/events/" + e.getId()))))
-                .collect(Collectors.toList());
+        List<EventFullDto> eventFullDto = distributionViewByEvents(eventStorage.getEventsByPublic(text, categories, startTime, endTime,
+                Paging.paging(from, size)));
         if (paid != null) {
             eventFullDto = eventFullDto.stream().filter(e -> e.getPaid() == paid).collect(Collectors.toList());
         }
@@ -209,8 +184,7 @@ public class EventService {
         if (sort == SortValues.EVENT_DATE) {
             eventFullDto = eventFullDto.stream().sorted(Comparator.comparing(EventFullDto::getEventDate))
                     .collect(Collectors.toList());
-        }
-        if (sort == SortValues.VIEWS) {
+        } else if (sort == SortValues.VIEWS) {
             eventFullDto = eventFullDto.stream().sorted(Comparator.comparing(EventFullDto::getViews))
                     .collect(Collectors.toList());
         }
@@ -225,20 +199,32 @@ public class EventService {
         }
         eventClient.addHit(new HitDto("/events/" + id, "/events/" + id,
                 request.getRemoteAddr(), null));
-        return new ResponseEntity<>(MapperEvent
-                .mapToEventFullDto(event, getSizeViewsByEvent(List.of("/events/" + id))), HttpStatus.OK);
+        return new ResponseEntity<>(distributionViewByEvents(List.of(event)), HttpStatus.OK);
     }
 
     public List<AppDto> getAllViewsByEvents(List<String> uris) {
-        List<AppDto> obj1 = eventClient.getStats(uris);
-        return obj1;
+        return eventClient.getStats(uris);
     }
 
-    public Integer getSizeViewsByEvent(List<String> uris) {
-        List<AppDto> list = getAllViewsByEvents(uris);
-        if (list.size() != 0) {
-            return list.get(0).getHits();
+    public List<EventFullDto> distributionViewByEvents(List<Event> events) {
+        HashMap<Integer, Event> eventMap = new HashMap<>();
+        List<EventFullDto> eventFullDto = new ArrayList<>();
+        events.forEach(e -> eventMap.put(e.getId(), e));
+        List<AppDto> view = getAllViewsByEvents(events.stream().map(e -> "/events/" + e.getId())
+                .collect(Collectors.toList()));
+        if(view.size()==0){
+            return eventFullDto;
         }
-        return 0;
+        for (AppDto appDto : view) {
+            int id = Integer.parseInt(appDto.getUri().substring(8));
+            EventFullDto eventDto = MapperEvent.mapToEventFullDto(eventMap.get(id), appDto.getHits());
+            eventFullDto.add(eventDto);
+        }
+        return eventFullDto;
+    }
+
+    public List<EventShortDto> getShortDtoWithView(List<Event> events) {
+        List<EventFullDto> eventFullDto = distributionViewByEvents(events);
+        return eventFullDto.stream().map(MapperEvent::mapToEventShortDto).collect(Collectors.toList());
     }
 }

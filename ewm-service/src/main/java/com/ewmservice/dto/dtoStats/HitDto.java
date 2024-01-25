@@ -1,4 +1,4 @@
-package com.ewmservice.dto.dto;
+package com.ewmservice.dto.dtoStats;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

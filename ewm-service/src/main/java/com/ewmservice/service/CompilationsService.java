@@ -1,9 +1,10 @@
 package com.ewmservice.service;
 
 import com.ewmservice.Paging;
-import com.ewmservice.dto.CompilationDto;
-import com.ewmservice.dto.CompilationInDto;
-import com.ewmservice.dto.CompilationUpdateDto;
+import com.ewmservice.dto.compilation.CompilationDto;
+import com.ewmservice.dto.compilation.CompilationInDto;
+import com.ewmservice.dto.compilation.CompilationUpdateDto;
+import com.ewmservice.dto.event.EventShortDto;
 import com.ewmservice.dto.mappers.MapperCompilation;
 import com.ewmservice.exception.DeleteCompilationException;
 import com.ewmservice.exception.UpdateEntityException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,24 +78,40 @@ public class CompilationsService {
 
     public ResponseEntity<Object> getCompilations(Boolean pinned, Integer from, Integer size) {
         List<Compilation> compilations;
+        List<Event> events = new ArrayList<>();
         if (pinned == null) {
             compilations = compilationsStorage.getCompilations(Paging.paging(from, size));
         } else {
             compilations = compilationsStorage.getCompilations(pinned, Paging.paging(from, size));
         }
-        return new ResponseEntity<>(compilations.stream()
-                .map(MapperCompilation::mapToCompilationDto).collect(Collectors.toList()), HttpStatus.OK);
+        List<CompilationDto> compilationsDto = compilations.stream().map(MapperCompilation::mapToCompilationDtoWithoutEvent)
+                .collect(Collectors.toList());
+        for (Compilation com : compilations) {
+            com.setEvents(new ArrayList<>());
+            events.addAll(com.getEvents());
+        }
+        List<EventShortDto> eventsDto = eventService.getShortDtoWithView(events);
+        for (EventShortDto eventDto : eventsDto) {
+            for (Compilation com : compilations) {
+                List<Integer> eventsId = com.getEvents().stream().map(Event::getId).collect(Collectors.toList());
+                if (eventsId.contains(eventDto.getId())) {
+                    compilationsDto.stream()
+                            .filter(c -> Objects.equals(c.getId(), com.getId())).findFirst()
+                            .get().getEvents().add(eventDto);
+                }
+            }
+        }
+        return new ResponseEntity<>(compilationsDto, HttpStatus.OK);
 
     }
 
     public ResponseEntity<Object> getCompilation(Integer compId) {
         Compilation compilation = compilationsStorage.getCompilation(compId);
+        CompilationDto compilationDto = MapperCompilation.mapToCompilationDto(compilation);
         if (!compilation.getEvents().isEmpty()) {
-            List<String> list = compilation.getEvents().stream().map(Event::getId)
-                    .map(e -> "/events/" + e).collect(Collectors.toList());
-            eventService.getAllViewsByEvents(list);
+            compilationDto.setEvents(eventService.getShortDtoWithView(compilation.getEvents()));
         }
-        return new ResponseEntity<>(MapperCompilation.mapToCompilationDto(compilation),
+        return new ResponseEntity<>(compilationDto,
                 HttpStatus.OK);
     }
 

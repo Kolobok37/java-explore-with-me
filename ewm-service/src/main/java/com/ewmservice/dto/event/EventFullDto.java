@@ -12,20 +12,20 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class EventFullDto {
-    Integer id;
-    String title;
-    String annotation;
-    String description;
-    Boolean paid;
-    Boolean requestModeration;
-    String eventDate;
-    String createdOn;
-    CategoryDto category;
-    UserShortDto initiator;
-    Location location;
-    Integer participantLimit;
-    Integer confirmedRequests;
-    Integer views;
-    StateEvent state;
-    String publishedOn;
+    private Integer id;
+    private String title;
+    private String annotation;
+    private String description;
+    private Boolean paid;
+    private Boolean requestModeration;
+    private String eventDate;
+    private String createdOn;
+    private CategoryDto category;
+    private UserShortDto initiator;
+    private Location location;
+    private Integer participantLimit;
+    private Integer confirmedRequests;
+    private Integer views;
+    private StateEvent state;
+    private String publishedOn;
 }

@@ -18,14 +18,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private   Integer id;
     @Column(name = "name")
     @NotBlank
     @Length(min = 2, max = 250)
-    String name;
+    private   String name;
     @Email
     @NotBlank
     @Length(min = 6, max = 254)
     @Column(name = "email")
-    String email;
+    private    String email;
 }

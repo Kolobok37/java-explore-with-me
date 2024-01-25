@@ -9,17 +9,17 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class EventInUpdateDto {
     @Length(max = 120, min = 3)
-    String title;
+    private String title;
     @Length(min = 20, max = 2000)
-    String annotation;
+    private String annotation;
     @Length(min = 20, max = 7000)
-    String description;
-    Boolean paid;
-    Boolean requestModeration;
-    String eventDate;
-    Integer category;
-    Location location;
-    Integer participantLimit;
-    StateEventDto stateAction;
+    private String description;
+    private Boolean paid;
+    private Boolean requestModeration;
+    private String eventDate;
+    private Integer category;
+    private Location location;
+    private Integer participantLimit;
+    private StateEventDto stateAction;
 }
 

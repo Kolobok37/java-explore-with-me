@@ -71,6 +71,15 @@ public class MapperEvent {
                 .initiator(MapperUser.mapToUserShortDto(event.getInitiator())).views(0).build();
     }
 
+    public static EventShortDto mapToEventShortDto(EventFullDto event) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return EventShortDto.builder().id(event.getId()).title(event.getTitle())
+                .eventDate(event.getEventDate()).paid(event.getPaid())
+                .annotation(event.getAnnotation()).category(event.getCategory())
+                .confirmedRequests(event.getConfirmedRequests())
+                .initiator(event.getInitiator()).views(event.getViews()).build();
+    }
+
     public static void updateEvent(Event newEvent, Event oldEvent) {
         if (newEvent.getTitle() != null) {
             oldEvent.setTitle(newEvent.getTitle());

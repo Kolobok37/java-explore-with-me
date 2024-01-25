@@ -1,7 +1,7 @@
 package com.ewmservice.client;
 
-import com.ewmservice.dto.dto.AppDto;
-import com.ewmservice.dto.dto.HitDto;
+import com.ewmservice.dto.dtoStats.AppDto;
+import com.ewmservice.dto.dtoStats.HitDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

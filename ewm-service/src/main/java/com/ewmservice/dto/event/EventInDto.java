@@ -13,20 +13,20 @@ import javax.validation.constraints.NotNull;
 public class EventInDto {
     @NotBlank(message = "Field: title. Error: must not be blank. Value: null")
     @Length(max = 120, min = 3)
-    String title;
+    private String title;
     @NotBlank(message = "Field: annotation. Error: must not be blank. Value: null")
     @Length(min = 20, max = 2000)
-    String annotation;
+    private String annotation;
     @NotBlank(message = "Field: description. Error: must not be blank. Value: null")
     @Length(min = 20, max = 7000)
-    String description;
-    Boolean paid;
-    Boolean requestModeration;
+    private String description;
+    private  Boolean paid;
+    private Boolean requestModeration;
     @NotBlank(message = "Field: eventDate. Error: must not be blank. Value: null")
-    String eventDate;
-    Integer category;
+    private String eventDate;
+    private  Integer category;
     @NotNull(message = "Field: location. Error: must not be blank. Value: null")
-    Location location;
-    Integer participantLimit;
-    StateEventDto stateAction;
+    private Location location;
+    private Integer participantLimit;
+    private StateEventDto stateAction;
 }

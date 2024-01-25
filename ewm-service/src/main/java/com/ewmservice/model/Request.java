@@ -16,15 +16,15 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private    Integer id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User requester;
+    private    User requester;
     @ManyToOne
     @JoinColumn(name = "event_id")
-    Event event;
+    private   Event event;
     @Column(name = "created")
-    LocalDateTime created;
+    private   LocalDateTime created;
     @Column(name = "status_request")
-    String status;
+    private   String status;
 }

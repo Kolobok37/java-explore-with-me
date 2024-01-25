@@ -10,13 +10,13 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class EventShortDto {
-    Integer id;
-    String title;
-    String annotation;
-    Boolean paid;
-    String eventDate;
-    CategoryDto category;
-    UserShortDto initiator;
-    Integer confirmedRequests;
-    Integer views;
+    private Integer id;
+    private String title;
+    private String annotation;
+    private  Boolean paid;
+    private  String eventDate;
+    private   CategoryDto category;
+    private   UserShortDto initiator;
+    private    Integer confirmedRequests;
+    private    Integer views;
 }

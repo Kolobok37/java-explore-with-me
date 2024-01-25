@@ -1,8 +1,8 @@
 package com.ewmservice.service;
 
-import com.ewmservice.dto.RequestChangeDto;
-import com.ewmservice.dto.RequestDto;
-import com.ewmservice.dto.RequestStatusUpdateDto;
+import com.ewmservice.dto.request.RequestChangeDto;
+import com.ewmservice.dto.request.RequestDto;
+import com.ewmservice.dto.request.RequestStatusUpdateDto;
 import com.ewmservice.dto.mappers.MapperRequest;
 import com.ewmservice.exception.RequestException;
 import com.ewmservice.exception.ValidationDataException;

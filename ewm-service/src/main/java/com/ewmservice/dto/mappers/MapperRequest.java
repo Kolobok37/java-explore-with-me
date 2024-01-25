@@ -1,7 +1,7 @@
 package com.ewmservice.dto.mappers;
 
-import com.ewmservice.dto.RequestDto;
-import com.ewmservice.dto.RequestStatusUpdateDto;
+import com.ewmservice.dto.request.RequestDto;
+import com.ewmservice.dto.request.RequestStatusUpdateDto;
 import com.ewmservice.model.Request;
 import com.ewmservice.model.auxiliaryEntities.StatusRequest;
 

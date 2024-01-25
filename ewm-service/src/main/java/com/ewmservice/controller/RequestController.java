@@ -1,6 +1,6 @@
 package com.ewmservice.controller;
 
-import com.ewmservice.dto.RequestChangeDto;
+import com.ewmservice.dto.request.RequestChangeDto;
 import com.ewmservice.service.RequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

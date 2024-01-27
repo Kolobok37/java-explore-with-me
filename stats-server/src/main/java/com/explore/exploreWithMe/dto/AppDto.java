@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppDto {
-    private String uri;
-    private String app;
-    private Long hits;
+    String uri;
+    String app;
+    Long hits;
 }

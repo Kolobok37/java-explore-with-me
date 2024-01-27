@@ -91,7 +91,7 @@ public class PrivateEventServiceImpl extends EventService implements PrivateEven
                 && StateEvent.REJECTED.equals(oldEvent.getStateAction())) {
             oldEvent.setStateAction(StateEvent.PENDING);
         }
-        return new ResponseEntity<>(distributionViewByEvents(List.of(eventStorage.updateEvent(oldEvent))).get(0)
-                , HttpStatus.OK);
+        return new ResponseEntity<>(distributionViewByEvents(List.of(eventStorage.updateEvent(oldEvent))).get(0),
+                HttpStatus.OK);
     }
 }

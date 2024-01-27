@@ -1,4 +1,4 @@
-package com.ewmservice.dto.dtoStats;
+package com.explore.exploreWithMe.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class AppDto {
     private String uri;
     private String app;
-    private Integer hits;
+    private Long hits;
 }

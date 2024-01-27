@@ -21,8 +21,9 @@ public class MapperEvent {
             time = Optional.of(LocalDateTime.parse(eventInDto.getEventDate(), formatter)).orElse(null);
         }
         Event event = new Event(null, eventInDto.getTitle(), eventInDto.getAnnotation(), eventInDto.getDescription(),
-                eventInDto.getPaid(), eventInDto.getRequestModeration(), time, null, null, null, eventInDto.getLocation(),
-                eventInDto.getParticipantLimit(), StateEvent.PENDING, LocalDateTime.now(), null);
+                eventInDto.getPaid(), eventInDto.getRequestModeration(), time, null, null, null,
+                eventInDto.getLocation(), eventInDto.getParticipantLimit(), StateEvent.PENDING, LocalDateTime.now(),
+                null);
         return event;
     }
 
@@ -32,8 +33,9 @@ public class MapperEvent {
         if (eventInUpdateDto.getEventDate() != null) {
             time = Optional.of(LocalDateTime.parse(eventInUpdateDto.getEventDate(), formatter)).orElse(null);
         }
-        Event event = new Event(null, eventInUpdateDto.getTitle(), eventInUpdateDto.getAnnotation(), eventInUpdateDto.getDescription(),
-                eventInUpdateDto.getPaid(), eventInUpdateDto.getRequestModeration(), time, null, null, null, eventInUpdateDto.getLocation(),
+        Event event = new Event(null, eventInUpdateDto.getTitle(), eventInUpdateDto.getAnnotation(),
+                eventInUpdateDto.getDescription(), eventInUpdateDto.getPaid(), eventInUpdateDto.getRequestModeration(),
+                time, null, null, null, eventInUpdateDto.getLocation(),
                 eventInUpdateDto.getParticipantLimit(), null, LocalDateTime.now(), null);
         return event;
     }
@@ -60,22 +62,13 @@ public class MapperEvent {
         return eventFullDto;
     }
 
-    public static EventShortDto mapToEventShortDto(Event event) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return EventShortDto.builder().id(event.getId()).title(event.getTitle())
-                .eventDate(event.getEventDate().format(formatter)).paid(event.getPaid())
-                .annotation(event.getAnnotation()).category(MapperCategory.mapToCategoryDto(event.getCategory()))
-                .confirmedRequests(event.getApprovedRequest().size())
-                .initiator(MapperUser.mapToUserShortDto(event.getInitiator())).views(0).build();
-    }
-
     public static EventShortDto mapToEventShortDto(EventFullDto event) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return EventShortDto.builder().id(event.getId()).title(event.getTitle())
                 .eventDate(event.getEventDate()).paid(event.getPaid())
                 .annotation(event.getAnnotation()).category(event.getCategory())
                 .confirmedRequests(event.getConfirmedRequests())
-                .initiator(event.getInitiator()).views(event.getViews()).build();
+                .initiator(event.getInitiator()).build();
     }
 
     public static void updateEvent(Event newEvent, Event oldEvent) {

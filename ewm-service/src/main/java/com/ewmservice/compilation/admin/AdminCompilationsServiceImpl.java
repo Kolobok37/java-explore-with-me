@@ -7,6 +7,7 @@ import com.ewmservice.compilation.dto.CompilationUpdateDto;
 import com.ewmservice.compilation.dto.MapperCompilation;
 import com.ewmservice.compilation.storage.CompilationsStorage;
 import com.ewmservice.event.Event;
+import com.ewmservice.event.isPublic.PublicEventServiceImpl;
 import com.ewmservice.event.storage.EventStorage;
 import com.ewmservice.exception.DeleteCompilationException;
 import com.ewmservice.exception.UpdateEntityException;
@@ -24,7 +25,8 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
     CompilationsStorage compilationsStorage;
     @Autowired
     EventStorage eventStorage;
-
+    @Autowired
+    PublicEventServiceImpl eventService;
 
     public ResponseEntity<Object> createCompilation(CompilationInDto compilationInDto) {
         List<Event> events = new ArrayList<>();
@@ -32,12 +34,12 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
             events = eventStorage.getEventsById(compilationInDto.getEvents());
         }
         Compilation compilation = MapperCompilation.mapToCompilation(compilationInDto);
-        compilation.setEvents(events);
         if (compilationInDto.getPinned() == null) {
             compilation.setPinned(false);
         }
         CompilationDto compilationDto = MapperCompilation
-                .mapToCompilationDto(compilationsStorage.createCompilation(compilation));
+                .mapToCompilationDtoWithoutEvent(compilationsStorage.createCompilation(compilation));
+        compilationDto.setEvents(eventService.getShortDtoWithView(events));
         return new ResponseEntity<>(compilationDto, HttpStatus.CREATED);
 
     }
@@ -67,8 +69,10 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
             compilation.setPinned(compilationInDto.getPinned());
         }
         CompilationDto compilationDto = MapperCompilation
-                .mapToCompilationDto(compilationsStorage.updateCompilation(compilation));
+                .mapToCompilationDtoWithoutEvent(compilationsStorage.updateCompilation(compilation));
+        if (!compilation.getEvents().isEmpty()) {
+            compilationDto.setEvents(eventService.getShortDtoWithView(compilation.getEvents()));
+        }
         return new ResponseEntity<>(compilationDto, HttpStatus.OK);
     }
-
 }

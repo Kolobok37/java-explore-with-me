@@ -1,6 +1,7 @@
 package com.ewmservice.event;
 
 import com.ewmservice.category.Category;
+import com.ewmservice.comment.Comment;
 import com.ewmservice.event.auxiliaryEntities.Location;
 import com.ewmservice.event.auxiliaryEntities.StateEvent;
 import com.ewmservice.request.Request;
@@ -57,6 +58,9 @@ public class Event {
     LocalDateTime createdOn;
     @Column(name = "published_on")
     LocalDateTime publishedOn;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "event_id")
+    private  List<Comment> comments;
 
     public List<Request> getApprovedRequest() {
         return requests.stream().filter(r -> StatusRequest.CONFIRMED.toString().equals(r.getStatus())).collect(Collectors.toList());

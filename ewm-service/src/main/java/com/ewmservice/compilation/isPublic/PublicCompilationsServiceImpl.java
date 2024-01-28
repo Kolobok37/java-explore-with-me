@@ -60,7 +60,7 @@ public class PublicCompilationsServiceImpl {
 
     public ResponseEntity<Object> getCompilation(Integer compId) {
         Compilation compilation = compilationsStorage.getCompilation(compId);
-        CompilationDto compilationDto = MapperCompilation.mapToCompilationDto(compilation);
+        CompilationDto compilationDto = MapperCompilation.mapToCompilationDtoWithoutEvent(compilation);
         if (!compilation.getEvents().isEmpty()) {
             compilationDto.setEvents(eventService.getShortDtoWithView(compilation.getEvents()));
         }

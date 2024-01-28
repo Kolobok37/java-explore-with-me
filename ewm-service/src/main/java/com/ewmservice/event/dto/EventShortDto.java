@@ -19,4 +19,5 @@ public class EventShortDto {
     UserShortDto initiator;
     Integer confirmedRequests;
     Integer views;
+    Integer quantityComments;
 }

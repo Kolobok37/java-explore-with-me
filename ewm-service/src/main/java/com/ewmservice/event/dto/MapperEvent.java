@@ -1,9 +1,10 @@
 package com.ewmservice.event.dto;
 
 import com.ewmservice.category.dto.MapperCategory;
+import com.ewmservice.comment.dto.CommentDto;
+import com.ewmservice.comment.dto.MapperComment;
 import com.ewmservice.event.Event;
 import com.ewmservice.event.auxiliaryEntities.StateEvent;
-import com.ewmservice.request.Request;
 import com.ewmservice.request.StatusRequest;
 import com.ewmservice.user.dto.MapperUser;
 
@@ -23,7 +24,7 @@ public class MapperEvent {
         Event event = new Event(null, eventInDto.getTitle(), eventInDto.getAnnotation(), eventInDto.getDescription(),
                 eventInDto.getPaid(), eventInDto.getRequestModeration(), time, null, null, null,
                 eventInDto.getLocation(), eventInDto.getParticipantLimit(), StateEvent.PENDING, LocalDateTime.now(),
-                null);
+                null, new ArrayList<>());
         return event;
     }
 
@@ -35,21 +36,23 @@ public class MapperEvent {
         }
         Event event = new Event(null, eventInUpdateDto.getTitle(), eventInUpdateDto.getAnnotation(),
                 eventInUpdateDto.getDescription(), eventInUpdateDto.getPaid(), eventInUpdateDto.getRequestModeration(),
-                time, null, null, null, eventInUpdateDto.getLocation(),
-                eventInUpdateDto.getParticipantLimit(), null, LocalDateTime.now(), null);
+                time, null, null, null, eventInUpdateDto.getLocation(), eventInUpdateDto.getParticipantLimit(), null,
+                LocalDateTime.now(), null, null);
         return event;
     }
 
     public static EventFullDto mapToEventFullDto(Event event, Integer views) {
-        Optional<List<Request>> requestList = Optional.ofNullable(event.getRequests());
-        List<Request> requests = requestList.orElse(new ArrayList<>());
+        List<CommentDto> comments = null;
+        if (event.getComments() != null) {
+            comments = MapperComment.mapToCommentsDto(event.getComments());
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EventFullDto eventFullDto = EventFullDto.builder().id(event.getId()).title(event.getTitle()).annotation(event.getAnnotation())
                 .description(event.getDescription()).paid(event.getPaid()).eventDate(event.getEventDate().format(formatter))
                 .requestModeration(event.getRequestModeration()).createdOn(event.getCreatedOn().format(formatter))
                 .category(MapperCategory.mapToCategoryDto(event.getCategory())).state(event.getStateAction())
                 .initiator(MapperUser.mapToUserShortDto(event.getInitiator())).location(event.getLocation())
-                .participantLimit(event.getParticipantLimit())
+                .participantLimit(event.getParticipantLimit()).comments(comments)
                 .views(views).build();
         if (event.getPublishedOn() != null) {
             eventFullDto.setPublishedOn(event.getPublishedOn().format(formatter));
@@ -63,11 +66,14 @@ public class MapperEvent {
     }
 
     public static EventShortDto mapToEventShortDto(EventFullDto event) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        int quantityComments = 0;
+        if (event.getComments() != null) {
+            quantityComments = event.getComments().size();
+        }
         return EventShortDto.builder().id(event.getId()).title(event.getTitle())
                 .eventDate(event.getEventDate()).paid(event.getPaid())
                 .annotation(event.getAnnotation()).category(event.getCategory())
-                .confirmedRequests(event.getConfirmedRequests())
+                .confirmedRequests(event.getConfirmedRequests()).quantityComments(quantityComments)
                 .initiator(event.getInitiator()).build();
     }
 

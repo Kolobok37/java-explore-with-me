@@ -25,10 +25,8 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
     CompilationsStorage compilationsStorage;
     @Autowired
     EventStorage eventStorage;
-
     @Autowired
     PublicEventServiceImpl eventService;
-
 
     public ResponseEntity<Object> createCompilation(CompilationInDto compilationInDto) {
         List<Event> events = new ArrayList<>();
@@ -36,12 +34,12 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
             events = eventStorage.getEventsById(compilationInDto.getEvents());
         }
         Compilation compilation = MapperCompilation.mapToCompilation(compilationInDto);
-        compilation.setEvents(events);
         if (compilationInDto.getPinned() == null) {
             compilation.setPinned(false);
         }
         CompilationDto compilationDto = MapperCompilation
                 .mapToCompilationDtoWithoutEvent(compilationsStorage.createCompilation(compilation));
+        compilationDto.setEvents(eventService.getShortDtoWithView(events));
         return new ResponseEntity<>(compilationDto, HttpStatus.CREATED);
 
     }
@@ -77,5 +75,4 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
         }
         return new ResponseEntity<>(compilationDto, HttpStatus.OK);
     }
-
 }

@@ -51,7 +51,7 @@ public class MapperEvent {
                 .category(MapperCategory.mapToCategoryDto(event.getCategory())).state(event.getStateAction())
                 .initiator(MapperUser.mapToUserShortDto(event.getInitiator())).location(event.getLocation())
                 .participantLimit(event.getParticipantLimit())
-                .views(views).comments(MapperComment.mapToCommentsDto(event.getComments())).build();
+                .views(views).build();
         if (event.getPublishedOn() != null) {
             eventFullDto.setPublishedOn(event.getPublishedOn().format(formatter));
         }
@@ -63,14 +63,22 @@ public class MapperEvent {
         return eventFullDto;
     }
 
+    public static EventShortDto mapToEventShortDto(Event event) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return EventShortDto.builder().id(event.getId()).title(event.getTitle())
+                .eventDate(event.getEventDate().format(formatter)).paid(event.getPaid())
+                .annotation(event.getAnnotation()).category(MapperCategory.mapToCategoryDto(event.getCategory()))
+                .confirmedRequests(event.getApprovedRequest().size())
+                .initiator(MapperUser.mapToUserShortDto(event.getInitiator())).views(0).build();
+    }
+
     public static EventShortDto mapToEventShortDto(EventFullDto event) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return EventShortDto.builder().id(event.getId()).title(event.getTitle())
                 .eventDate(event.getEventDate()).paid(event.getPaid())
                 .annotation(event.getAnnotation()).category(event.getCategory())
                 .confirmedRequests(event.getConfirmedRequests())
-                .initiator(event.getInitiator()).views(event.getViews()).quantityComments(event.getComments().size())
-                .build();
+                .initiator(event.getInitiator()).build();
     }
 
     public static void updateEvent(Event newEvent, Event oldEvent) {

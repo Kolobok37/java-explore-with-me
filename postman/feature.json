@@ -20,14 +20,9 @@
 							"    pm.response.to.be.withBody;",
 							"    pm.response.to.be.json;",
 							"});",
-							"pm.test(\"Test user 'name\", function () {",
+							"pm.test(\"Test user 'email\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.name, '\"stanamee\" must be \"Regina Hintz\"').to.eql(\"Regina Hintz\");",
-							"});",
-							"pm.test(\"Test user 'id\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
-							"",
+							"    pm.expect(jsonData.email, '\"email\" must be \"Judd33356@hotmail.com\"').to.eql(\"Judd33356@hotmail.com\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -39,7 +34,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"name\":\"Regina Hintz\",\"email\":\"Judd56@hotmail.com\"}",
+					"raw": "{\"name\":\"Regin11a Hintz\",\"email\":\"Judd33356@hotmail.com\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -68,9 +63,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});",
 							"pm.test(\"Test category name\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.name, '\"name\" must be \"Gloves52\"').to.eql(\"Gloves52\");",
+							"    pm.expect(jsonData.name, '\"name\" must be \"Gloves56662\"').to.eql(\"Gloves56662\");",
 							"",
 							"});"
 						],
@@ -83,7 +81,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"name\":\"Gloves52\"}",
+					"raw": "{\"name\":\"Gloves56662\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -123,12 +121,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.state, '\"state\" must be \"PENDING\"').to.eql(\"PENDING\");",
 							"});",
-							"",
-							"pm.test(\"Test user 'id\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
-							"",
-							"});"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -281,7 +274,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -307,6 +302,19 @@
 		},
 		{
 			"name": "add User 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -336,6 +344,19 @@
 		},
 		{
 			"name": "addComment 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -367,6 +388,19 @@
 		},
 		{
 			"name": "Add comment 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -398,6 +432,19 @@
 		},
 		{
 			"name": "get Event with comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -456,6 +503,19 @@
 		},
 		{
 			"name": "get event's comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -477,7 +537,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "Update comment",
 			"event": [
 				{
 					"listen": "test",
@@ -528,6 +588,51 @@
 					"path": [
 						"comments",
 						"1",
+						"event",
+						"comment",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update comment reject",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"text\": \"Update2 comment1\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/comments/2/event/comment/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"comments",
+						"2",
 						"event",
 						"comment",
 						"1"

@@ -4,6 +4,7 @@ package com.explore.exploreWithMe.service;
 import com.explore.exploreWithMe.dto.AppDto;
 import com.explore.exploreWithMe.dto.HitDto;
 import com.explore.exploreWithMe.dto.MapperHit;
+import com.explore.exploreWithMe.exception.ValidationDataException;
 import com.explore.exploreWithMe.model.App;
 import com.explore.exploreWithMe.model.Hit;
 import com.explore.exploreWithMe.storage.StatisticsStorage;
@@ -26,32 +27,44 @@ public class StatisticService {
     public ResponseEntity<List<AppDto>> getStats(String start, String end, List<String> uris, String unique) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<AppDto> appDtoList;
-        if (start.isBlank()) {
-            start = LocalDateTime.MIN.format(formatter);
+        LocalDateTime startTime;
+        LocalDateTime endTime;
+        if (start == null && end != null || end == null && start != null) {
+            throw new ValidationDataException("Date is not valid");
         }
-        if (end.isBlank()) {
-            end = LocalDateTime.MAX.format(formatter);
+        if (start == null || start.isBlank()) {
+            startTime = LocalDateTime.of(1400, 1, 1, 0, 0);
+        } else {
+            startTime = LocalDateTime.parse(start, formatter);
+        }
+        if (end == null || end.isBlank()) {
+            endTime = LocalDateTime.of(9999, 12, 31, 23, 59);
+        } else {
+            endTime = LocalDateTime.parse(end, formatter);
+        }
+        if (startTime.isAfter(endTime)) {
+            throw new ValidationDataException("Date is not valid");
         }
         if (uris == null) {
-            appDtoList = statisticsStorage.getAllStats(LocalDateTime.parse(start, formatter),
-                            LocalDateTime.parse(end, formatter), unique).stream()
+            appDtoList = statisticsStorage.getAllStats(startTime, endTime, unique).stream()
                     .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
         } else {
-            appDtoList = statisticsStorage.getStatsByUri(uris, LocalDateTime.parse(start, formatter),
-                            LocalDateTime.parse(end, formatter), unique).stream()
+            appDtoList = statisticsStorage.getStatsByUri(uris, startTime, endTime, unique).stream()
                     .sorted(Comparator.comparingDouble(AppDto::getHits).reversed()).collect(Collectors.toList());
         }
         return new ResponseEntity<>(appDtoList, HttpStatus.OK);
     }
 
     public ResponseEntity<Object> addHit(HitDto hitDto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (hitDto.getName() == null) {
             hitDto.setName(hitDto.getUri());
         }
-        Hit hit = MapperHit.mapToHit(hitDto);
         if (hitDto.getTimestamp() == null) {
-            hit.setTimestamp(LocalDateTime.now());
+            hitDto.setTimestamp(LocalDateTime.now().format(formatter));
         }
+        Hit hit = MapperHit.mapToHit(hitDto);
+
         App app = hit.getApp();
         statisticsStorage.createApp(app);
         return new ResponseEntity<>(statisticsStorage.addHit(hit), HttpStatus.CREATED);

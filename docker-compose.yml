@@ -4,8 +4,10 @@ services:
   stats-server:
     build: stats-server/
     container_name: stats-server
+    restart: always
     depends_on:
-      - stats_db
+      stats_db:
+        condition: service_healthy
     ports:
       - "9090:9090"
       - "9091:9091"
@@ -18,27 +20,32 @@ services:
   stats_db:
     container_name: stats_db
     image: postgres
-    restart: always
+    restart: on-failure
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     environment:
       POSTGRES_DB: stats_db
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       PGDATA: /home/aleksandr/dev/stats_db
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 65s
-      timeout: 65s
-      retries: 65
     volumes:
       - ./stats-server/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   ewm-service:
     build: ewm-service/
     container_name: ewm-service
+    restart: on-failure
+    depends_on:
+      ewm-db:
+        condition: service_healthy
     ports:
       - "8080:8080"
+      - "8081:8081"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
       - SPRING_DATASOURCE_USERNAME=test
@@ -50,8 +57,13 @@ services:
     container_name: ewm-db
     image: postgres
     ports:
-      - "5431:5431"
+      - "5431:5432"
     restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     environment:
       POSTGRES_DB: ewm-db
       POSTGRES_USER: test

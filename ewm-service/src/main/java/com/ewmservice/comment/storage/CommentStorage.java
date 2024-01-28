@@ -11,12 +11,13 @@ import java.util.List;
 public class CommentStorage {
     @Autowired
     CommentRepository commentRepository;
+
     public Comment createComment(Comment comment) {
         return commentRepository.save(comment);
     }
 
     public Comment getComment(Integer commentId) {
-        return commentRepository.findById(commentId).orElseThrow(()->new NotFoundException("Comment is not found"));
+        return commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment is not found"));
     }
 
     public Comment updateComment(Comment comment) {

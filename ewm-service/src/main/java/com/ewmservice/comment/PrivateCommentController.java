@@ -16,29 +16,31 @@ import java.util.List;
 public class PrivateCommentController {
     @Autowired
     PrivateCommentServiceImpl commentService;
+
     @PostMapping("/{userId}/event/{eventId}")
     public ResponseEntity<CommentDto> createComment(@PathVariable Integer userId,
-                                                    @PathVariable Integer eventId, @RequestParam @Valid Comment text) {
+                                                    @PathVariable Integer eventId, @RequestBody @Valid Comment text) {
         return commentService.createComment(userId, eventId, text);
     }
 
     @PatchMapping("/{userId}/event/comment/{commentId}")
-    public ResponseEntity<CommentDto>  updateComment(@PathVariable Integer userId,
-                                                     @PathVariable Integer commentId, @RequestParam @Valid Comment text) {
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer userId,
+                                                    @PathVariable Integer commentId, @RequestBody @Valid Comment text) {
         return commentService.updateComment(userId, commentId, text);
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<CommentDto>  getComment(@PathVariable @Positive Integer commentId) {
+    public ResponseEntity<CommentDto> getComment(@PathVariable @Positive Integer commentId) {
         return commentService.getComment(commentId);
     }
 
     @GetMapping("/{userId}/comment")
-    public ResponseEntity<List<CommentDto>>  getMyComments(@PathVariable @Positive Integer userId) {
+    public ResponseEntity<List<CommentDto>> getMyComments(@PathVariable @Positive Integer userId) {
         return commentService.getMyComments(userId);
     }
-    @GetMapping("/{event}/comment")
-    public ResponseEntity<List<CommentDto>>  getEventComments(@PathVariable @Positive Integer eventId) {
+
+    @GetMapping("/event/{eventId}/comment")
+    public ResponseEntity<List<CommentDto>> getEventComments(@PathVariable @Positive Integer eventId) {
         return commentService.getEventComments(eventId);
     }
 }

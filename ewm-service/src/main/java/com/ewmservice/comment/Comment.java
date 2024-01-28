@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
+    @Column(name = "date_comment", nullable = false)
+    LocalDateTime created;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,9 +28,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "commentator_id")
     private User commentator;
-    @Column(name = "date_comment", nullable = false)
-    LocalDateTime created;
     @NotBlank(message = "Text cannot be empty")
-    @Column(name = "date_comment", nullable = false)
+    @Column(name = "text", nullable = false)
     private String text;
 }

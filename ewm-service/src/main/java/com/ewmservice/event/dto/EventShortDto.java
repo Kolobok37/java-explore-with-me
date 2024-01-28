@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.JoinColumn;
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @Builder

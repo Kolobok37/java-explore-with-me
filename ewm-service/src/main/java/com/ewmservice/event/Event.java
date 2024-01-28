@@ -60,7 +60,7 @@ public class Event {
     LocalDateTime publishedOn;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
-    private  List<Comment> comments;
+    private List<Comment> comments;
 
     public List<Request> getApprovedRequest() {
         return requests.stream().filter(r -> StatusRequest.CONFIRMED.toString().equals(r.getStatus())).collect(Collectors.toList());
